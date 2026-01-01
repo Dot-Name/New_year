@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishing Page - Challenge & Wishes</title>
+    <style>
+        :root {
+            --color-primary: #32a8c6;
+            --color-primary-hover: #2a96b0;
+            --color-primary-active: #1f74a3;
+            --color-success: #2ecc71;
+            --color-error: #e74c3c;
+            --color-warning: #f39c12;
+            --color-bg-dark: #1a1a2e;
+            --color-bg-light: #f8f9fa;
+            --color-text-dark: #2c3e50;
+            --color-text-light: #ecf0f1;
+            --color-card-bg: #ffffff;
+            --color-accent-1: #ff6b6b;
+            --color-accent-2: #4ecdc4;
+            --color-accent-3: #ffe66d;
+            --color-accent-4: #95e1d3;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--color-bg-light);
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '✨';
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-size: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .header::after {
+            content: '🎉';
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            font-size: 2rem;
+            animation: float 3s ease-in-out infinite 1s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .game-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .game-title {
+            font-size: 1.8rem;
+            color: var(--color-text-dark);
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .game-pad {
+            aspect-ratio: 1;
+            border-radius: 15px;
+            cursor: pointer;
+            border: none;
+            font-size: 2.5rem;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+            min-height: 140px;
+        }
+
+        .game-pad::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0);
+            transition: background 0.2s ease;
+        }
+
+        .game-pad-1 {
+            background: linear-gradient(135deg, #ff6b6b, #ff5252);
+            color: white;
+        }
+
+        .game-pad-2 {
+            background: linear-gradient(135deg, #4ecdc4, #45b7a8);
+            color: white;
+        }
+
+        .game-pad-3 {
+            background: linear-gradient(135deg, #ffe66d, #ffd93d);
+            color: #333;
+        }
+
+        .game-pad-4 {
+            background: linear-gradient(135deg, #95e1d3, #7dd4c2);
+            color: white;
+        }
+
+        .game-pad:active::before,
+        .game-pad.active::before {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .game-pad:hover {
+            transform: scale(1.05);
+        }
+
+        .game-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #f5f5f5, #e8e8e8);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: var(--color-text-dark);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        .info-value {
+            font-size: 1.8rem;
+            color: var(--color-primary);
+            font-weight: 700;
+            margin-top: 5px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(50, 168, 198, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .message {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            min-height: 20px;
+        }
+
+        .message.error {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--color-error);
+        }
+
+        .message.success {
+            background: rgba(46, 204, 113, 0.1);
+            color: var(--color-success);
+        }
+
+        .message.info {
+            background: rgba(50, 168, 198, 0.1);
+            color: var(--color-primary);
+        }
+
+        .wishes-section {
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        .wishes-section.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .wishes-title {
+            font-size: 2.2rem;
+            color: transparent;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .wishes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .wish-card {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wish-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #ffe66d);
+            animation: slideRight 2s infinite;
+        }
+
+        @keyframes slideRight {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .wish-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--color-primary);
+        }
+
+        .wish-emoji {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .wish-category {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--color-primary);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .wish-text {
+            font-size: 1rem;
+            color: var(--color-text-dark);
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .difficulty-warning {
+            background: rgba(243, 156, 18, 0.1);
+            border-left: 4px solid var(--color-warning);
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            color: #d68910;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .game-board {
+                gap: 10px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .wishes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-box {
+                padding: 15px;
+            }
+
+            .info-value {
+                font-size: 1.4rem;
+            }
+        }
+
+        .pulse {
+            animation: pulse 0.3s ease-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 Challenge & Wishes 🎮</h1>
+            <p>Win the Memory Game to Unlock My Heartfelt Wishes</p>
+            <p style="font-size: 0.95rem; margin-top: 8px; opacity: 0.9;">~ Manish</p>
+        </div>
+
+        <div class="content">
+            <!-- Game Section -->
+            <div class="game-section">
+                <h2 class="game-title">Simon Says: Memory Challenge</h2>
+
+                <div class="difficulty-warning">
+                    ⚡ <strong>10-Level Challenge:</strong> Each level adds a new light. Watch the sequence and repeat it perfectly. Good luck! 🍀
+                </div>
+
+                <div class="game-info">
+                    <div class="info-box">
+                        <div class="info-label">Level</div>
+                        <div class="info-value" id="level">1</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-label">Score</div>
+                        <div class="info-value" id="score">0</div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-label">Status</div>
+                        <div class="info-value" id="status" style="font-size: 1rem;">Ready</div>
+                    </div>
+                </div>
+
+                <div class="game-board">
+                    <button class="game-pad game-pad-1" data-color="1">1</button>
+                    <button class="game-pad game-pad-2" data-color="2">2</button>
+                    <button class="game-pad game-pad-3" data-color="3">3</button>
+                    <button class="game-pad game-pad-4" data-color="4">4</button>
+                </div>
+
+                <div class="controls">
+                    <button class="btn btn-primary" id="startBtn">Start Game</button>
+                    <button class="btn btn-primary" id="resetBtn" style="display: none;">Reset Game</button>
+                </div>
+
+                <div style="text-align: center; margin-top: 15px;">
+                    <button class="btn btn-primary" id="guideBtn" style="background: linear-gradient(135deg, #764ba2, #667eea); font-size: 0.9rem;">📁 How to Share on GitHub</button>
+                </div>
+
+                <div class="message" id="message"></div>
+            </div>
+
+            <!-- GitHub Hosting Guide -->
+            <div class="github-guide" id="githubGuide" style="display: none;">
+                <h3 style="color: var(--color-primary); margin-bottom: 15px; text-align: center;">📁 How to Host on GitHub Pages</h3>
+                <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; border-left: 4px solid var(--color-primary);">
+                    <ol style="color: var(--color-text-dark); line-height: 1.8; font-size: 0.95rem;">
+                        <li><strong>Create a GitHub Account:</strong> Visit <a href="https://github.com" target="_blank" rel="noopener noreferrer">github.com</a> and sign up</li>
+                        <li><strong>Create a New Repository:</strong> Click "+" → "New repository" → Name it "wishing-page"</li>
+                        <li><strong>Clone the Repository:</strong> <code style="background: #e0e0e0; padding: 2px 6px; border-radius: 3px;">git clone https://github.com/YOUR_USERNAME/wishing-page.git</code></li>
+                        <li><strong>Add the HTML File:</strong> Paste this entire HTML code into a file named <code style="background: #e0e0e0; padding: 2px 6px; border-radius: 3px;">index.html</code></li>
+                        <li><strong>Push to GitHub:</strong> Run these commands:
+                            <div style="background: white; padding: 10px; margin-top: 8px; border-radius: 5px; font-family: monospace; font-size: 0.9rem;">
+                                git add index.html<br>
+                                git commit -m "Add wishing page"<br>
+                                git push origin main
+                            </div>
+                        </li>
+                        <li><strong>Enable GitHub Pages:</strong> Go to repository Settings → scroll to "Pages" → Select "main" branch → Save</li>
+                        <li><strong>Access Your Site:</strong> Visit <code style="background: #e0e0e0; padding: 2px 6px; border-radius: 3px;">https://YOUR_USERNAME.github.io/wishing-page</code></li>
+                        <li><strong>Share with Friends:</strong> Send them the link to let them play and see your wishes! 🎉</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Wishes Section -->
+            <div class="wishes-section" id="wishesSection">
+                <h2 class="wishes-title">✨ My Heartfelt Wishes for You ✨</h2>
+                <div class="wishes-grid" id="wishesGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class SimonGame {
+            constructor() {
+                this.sequence = [];
+                this.userSequence = [];
+                this.level = 1;
+                this.score = 0;
+                this.isPlaying = false;
+                this.gameWon = false;
+                this.MAX_LEVEL = 10;
+
+                this.pads = document.querySelectorAll('.game-pad');
+                this.levelDisplay = document.getElementById('level');
+                this.scoreDisplay = document.getElementById('score');
+                this.statusDisplay = document.getElementById('status');
+                this.startBtn = document.getElementById('startBtn');
+                this.resetBtn = document.getElementById('resetBtn');
+                this.messageDiv = document.getElementById('message');
+                this.wishesSection = document.getElementById('wishesSection');
+                this.wishesGrid = document.getElementById('wishesGrid');
+
+                this.setupEventListeners();
+                this.initializeWishes();
+            }
+
+            setupEventListeners() {
+                this.startBtn.addEventListener('click', () => this.startGame());
+                this.resetBtn.addEventListener('click', () => this.resetGame());
+                document.getElementById('guideBtn').addEventListener('click', () => this.toggleGuide());
+                this.pads.forEach(pad => {
+                    pad.addEventListener('click', (e) => this.padClick(e));
+                });
+            }
+
+            toggleGuide() {
+                const guide = document.getElementById('githubGuide');
+                guide.style.display = guide.style.display === 'none' ? 'block' : 'none';
+            }
+
+            startGame() {
+                this.resetGame();
+                this.nextLevel();
+            }
+
+            resetGame() {
+                this.sequence = [];
+                this.userSequence = [];
+                this.level = 1;
+                this.score = 0;
+                this.isPlaying = false;
+                this.gameWon = false;
+                this.updateDisplay();
+                this.clearMessage();
+                this.wishesSection.classList.remove('show');
+                this.startBtn.style.display = 'inline-block';
+                this.resetBtn.style.display = 'none';
+            }
+
+            nextLevel() {
+                this.userSequence = [];
+                this.level++;
+
+                if (this.level > this.MAX_LEVEL) {
+                    this.winGame();
+                    return;
+                }
+
+                this.score = (this.level - 1) * 10;
+                this.updateDisplay();
+                this.showMessage(`Level ${this.level}! Watch the sequence...`, 'info');
+                this.startBtn.disabled = true;
+
+                setTimeout(() => this.playSequence(), 800);
+            }
+
+            playSequence() {
+                this.isPlaying = true;
+                const newColor = Math.floor(Math.random() * 4) + 1;
+                this.sequence.push(newColor);
+
+                setTimeout(() => this.displaySequence(0), 400);
+            }
+
+            displaySequence(index) {
+                if (index >= this.sequence.length) {
+                    this.isPlaying = false;
+                    this.statusDisplay.textContent = 'Your Turn';
+                    return;
+                }
+
+                const color = this.sequence[index];
+                const pad = document.querySelector(`[data-color="${color}"]`);
+
+                this.activatePad(pad);
+
+                setTimeout(() => {
+                    this.displaySequence(index + 1);
+                }, 600);
+            }
+
+            activatePad(pad) {
+                pad.classList.add('active');
+                this.playSound(pad.dataset.color);
+
+                setTimeout(() => {
+                    pad.classList.remove('active');
+                }, 300);
+            }
+
+            padClick(e) {
+                if (this.isPlaying || this.gameWon) return;
+
+                const pad = e.target;
+                const color = parseInt(pad.dataset.color);
+
+                this.activatePad(pad);
+                this.userSequence.push(color);
+
+                if (this.userSequence[this.userSequence.length - 1] !== this.sequence[this.userSequence.length - 1]) {
+                    this.showMessage('❌ Wrong! Game Over! Try Again', 'error');
+                    this.statusDisplay.textContent = 'Failed';
+                    this.resetBtn.style.display = 'inline-block';
+                    this.startBtn.style.display = 'none';
+                    return;
+                }
+
+                if (this.userSequence.length === this.sequence.length) {
+                    this.showMessage('✅ Perfect! Next Level...', 'success');
+                    this.statusDisplay.textContent = 'Complete!';
+                    this.pads.forEach(p => p.disabled = true);
+                    setTimeout(() => {
+                        this.pads.forEach(p => p.disabled = false);
+                        this.nextLevel();
+                    }, 1500);
+                }
+            }
+
+            winGame() {
+                this.gameWon = true;
+                this.score = 100;
+                this.level = this.MAX_LEVEL;
+                this.updateDisplay();
+                this.statusDisplay.textContent = 'Champion! 🏆';
+                this.showMessage('🎉 Congratulations! You Won! 🎉', 'success');
+                this.displayWishes();
+                this.startBtn.style.display = 'none';
+                this.resetBtn.style.display = 'inline-block';
+                this.pads.forEach(p => p.disabled = true);
+            }
+
+            padClick(e) {
+                if (this.isPlaying || this.gameWon) return;
+
+                const pad = e.target;
+                const color = parseInt(pad.dataset.color);
+
+                this.activatePad(pad);
+                this.userSequence.push(color);
+
+                // Check if wrong
+                if (this.userSequence[this.userSequence.length - 1] !== this.sequence[this.userSequence.length - 1]) {
+                    this.showMessage('❌ Wrong! Game Over! Try Again', 'error');
+                    this.statusDisplay.textContent = 'Failed';
+                    this.resetBtn.style.display = 'inline-block';
+                    this.startBtn.style.display = 'none';
+                    return;
+                }
+
+                // Check if completed level
+                if (this.userSequence.length === this.sequence.length) {
+                    this.showMessage('✅ Perfect! Next Level...', 'success');
+                    this.statusDisplay.textContent = 'Complete!';
+                    this.pads.forEach(p => p.disabled = true);
+                    setTimeout(() => {
+                        this.pads.forEach(p => p.disabled = false);
+                        this.nextLevel();
+                    }, 1500);
+                }
+            }
+
+            displayWishes() {
+                this.wishesSection.classList.add('show');
+                this.wishesGrid.innerHTML = '';
+
+                this.wishes.forEach(wish => {
+                    const card = document.createElement('div');
+                    card.className = 'wish-card';
+                    card.innerHTML = `
+                        <div class="wish-emoji">${wish.emoji}</div>
+                        <div class="wish-category">${wish.category}</div>
+                        <div class="wish-text">${wish.text}</div>
+                    `;
+                    this.wishesGrid.appendChild(card);
+
+                    setTimeout(() => {
+                        card.classList.add('pulse');
+                    }, this.wishes.indexOf(wish) * 100);
+                });
+            }
+
+            initializeWishes() {
+                this.wishes = [
+                    {
+                        emoji: '👨‍🎓',
+                        category: 'My Dear Students',
+                        text: 'May you always have the curiosity to learn and the confidence to excel. Your potential is limitless!'
+                    },
+                    {
+                        emoji: '👨‍👩‍👧‍👦',
+                        category: 'Family',
+                        text: 'With love and gratitude for all your support. May our bond grow stronger with each passing day.'
+                    },
+                    {
+                        emoji: '🎓',
+                        category: 'Teachers & Mentors',
+                        text: 'Thank you for guiding me. Your wisdom lights the path for many. Respect and appreciation always!'
+                    },
+                    {
+                        emoji: '👥',
+                        category: 'Cousins & Friends',
+                        text: 'Life is beautiful with friends like you. Let\'s create more memories and cherish every moment together!'
+                    },
+                    {
+                        emoji: '💼',
+                        category: 'Colleagues',
+                        text: 'Working with you brings joy and growth. May we achieve great things together and support each other always.'
+                    },
+                    {
+                        emoji: '🌟',
+                        category: 'Everyone',
+                        text: 'May your days be filled with happiness, your hearts with peace, and your dreams with reality. Happy wishes! ✨'
+                    },
+                    {
+                        emoji: '🎆',
+                        category: 'Happy New Year',
+                        text: 'As we step into 2026, may it bring new opportunities, success, and unforgettable moments. Here\'s to a year filled with growth, joy, and amazing achievements together!'
+                    }
+                ];
+            }
+
+            updateDisplay() {
+                this.levelDisplay.textContent = this.level;
+                this.scoreDisplay.textContent = this.score;
+            }
+
+            showMessage(text, type) {
+                this.messageDiv.textContent = text;
+                this.messageDiv.className = `message ${type}`;
+            }
+
+            clearMessage() {
+                this.messageDiv.textContent = '';
+                this.messageDiv.className = 'message';
+            }
+
+            playSound(color) {
+                // Create a simple beep sound using Web Audio API
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+
+                oscillator.connect(gain);
+                gain.connect(audioContext.destination);
+
+                const frequencies = { 1: 440, 2: 554, 3: 659, 4: 784 };
+                oscillator.frequency.value = frequencies[color];
+                gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.2);
+            }
+        }
+
+        // Initialize game when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new SimonGame();
+        });
+    </script>
+</body>
+</html>
